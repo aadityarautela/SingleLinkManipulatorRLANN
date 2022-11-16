@@ -10,6 +10,7 @@ N2 = length(X2);
 N3 = length(X3);
 U = linspace(-10,10,40);
 policy = zeros(N1,N2,N3);
+pol = zeros(N1,N2,N3);
 V = zeros(N1,N2,N3);
 
 for runs = 1:10
@@ -19,14 +20,19 @@ for runs = 1:10
                 for u=1:length(U)
                     action = U(u);
                     next_state = [X1(i) X2(j) X3(k)]+0.1*SingleLinkManipulator(X1(i) ,X2(j), X3(k), action);
-                    [x1, x2, x3] = Quantize(next_state, X1,X2,X3);
+                    quant_state = Quantize(next_state, X1,X2,X3);
+                    x1 = quant_state(1,1);
+                    x2 = quant_state(1,2);
+                    x3 = quant_state(1,3);
                     nextV(u) = V(x1,x2,x3);
                     clear x1 x2 x3;
                     clear next_state;
+                    clear quant_state;
                     clear action;
                 end
                 [Vbest,bestind] = max(nextV);
                 V(i,j,k)= Reward(X1(i)) +  gamma*Vbest ;
+                pol(i,j,k) = U(bestind);
             end
         end
     end
@@ -37,9 +43,17 @@ for i=1:N1
         for k=1:N3
             for u=1:length(U)
                 action = U(u);
-                next_state = [X1(i);X2(j);X3(k)]+0.1*SingleLinkManipulator(X1(i) ,X2(j), X3(k), action);
-                [x1,x2,x3] = Quantize(next_state, X1,X2,X3);
+                next_state = [X1(i) X2(j) X3(k)]+0.1*SingleLinkManipulator(X1(i) ,X2(j), X3(k), action);
+                quant_state = Quantize(next_state, X1,X2,X3);
+                x1 = quant_state(1,1);
+                x2 = quant_state(1,2);
+                x3 = quant_state(1,3);
                 nextV(u) = V(x1,x2,x3);
+                clear x1 x2 x3;
+                clear next_state;
+                clear quant_state;
+                clear action;
+                
             end
             [Vbest,bestind] = max(nextV);
             policy(i,j,k) = U(bestind);
