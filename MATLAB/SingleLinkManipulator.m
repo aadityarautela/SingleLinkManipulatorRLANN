@@ -1,4 +1,4 @@
-function [x1dot, x2dot, x3dot]= SingleLinkManipulator(x1, x2, x3, u) 
+function dyndot= SingleLinkManipulator(curr_state, u) 
 J = 1.625103;
 m = 0.506;
 M0 = 0.434;
@@ -14,8 +14,16 @@ M = J + m*L0*L0/3.0 + M0*L0*L0 + 2*M0*R0*R0/5/Kt;
 N = m*L0*g/2.0 + M0*L0*g/Kt;
 B = B0/Kt;
 
+x1 = curr_state(1);
+x2 = curr_state(2);
+x3 = curr_state(3);
+
 x1dot = x2;
 x2dot = -(N/M)*sin(x1) - (B/M)*x2 + (x3/M);
 x3dot = -(Kb/L)*x2 - (R/L)*x3 + (u/L);
+dyndot = zeros(1,3);
+dyndot(1) = x1dot;
+dyndot(2) = x2dot;
+dyndot(3) = x3dot;
 
 end

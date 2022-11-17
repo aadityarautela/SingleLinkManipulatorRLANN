@@ -7,6 +7,8 @@ epsout = 0.05;
 
 if state(1)>(X1(end)-deltax1)
     x1 = length(X1);
+elseif state(1) < X1(1)
+    x1 = 1;
 else
     x1 = find(abs(X1-state(1)) <= (deltax1+0.05),1);
     
@@ -14,6 +16,8 @@ end
 
 if state(2)>(X2(end)-deltax2)
     x2 = length(X2);
+elseif state(2) < X2(1)
+    x2 = 1;
 else
     x2 = find(abs(X2-state(2)) <= (deltax2 + 0.05),1);
     
@@ -21,6 +25,8 @@ end
 
 if state(3)>(X3(end)-deltax3)
     x3 = length(X3);
+elseif state(3) < X3(1)
+    x3 = 1;
 else
     x3 = find(abs(X3-state(3)) <= (deltax3 + 0.05),1);
     
